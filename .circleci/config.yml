@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  sam: circleci/aws-sam-serverless@2.1.0
+
 jobs:
   build-and-test:
     docker:
@@ -9,8 +12,20 @@ jobs:
       - run: touch .python.installed
       - run: make lint
       - run: make test
+  deploy:
+    executor: sam/default
+    steps:
+      - sam/install
+      - checkout
+      - run: make deploy
 
 workflows:
   main:
     jobs:
       - build-and-test
+      - deploy:
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: main
