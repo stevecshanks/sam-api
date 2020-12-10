@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  DeployUser:
+    Type: AWS::IAM::User
+    Properties:
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
+        - arn:aws:iam::aws:policy/IAMFullAccess
+        - arn:aws:iam::aws:policy/AWSLambdaFullAccess
+        - arn:aws:iam::aws:policy/AmazonAPIGatewayAdministrator
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess
+      UserName: !Join ["-", ["sam-api-deploy", !Ref "AWS::Region"]]
