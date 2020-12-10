@@ -21,6 +21,13 @@ clean:
 	rm -f $(PYTHON)
 	rm -rf .venv
 
+.PHONY: deploy-user
+deploy-user:
+	aws cloudformation deploy \
+		--stack-name sam-api-deploy-user \
+		--template-file deployment_iam_user.yaml \
+		--capabilities CAPABILITY_NAMED_IAM
+
 .venv: .venv/bin/pip hello_world/requirements-dev.txt
 	.venv/bin/pip install -r hello_world/requirements-dev.txt
 	touch -m $@
