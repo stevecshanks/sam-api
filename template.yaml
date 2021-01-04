@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
   sam-api
@@ -7,6 +7,13 @@ Description: >
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
+  Api:
+    Auth:
+      Authorizers:
+        CognitoAuthorizer:
+          UserPoolArn: !GetAtt "UserPool.Arn"
+      DefaultAuthorizer: CognitoAuthorizer
+
   Function:
     Timeout: 3
 
@@ -23,6 +30,25 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: True
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+
+  UserPoolTokenClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
+      ExplicitAuthFlows:
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
+      PreventUserExistenceErrors: ENABLED
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
