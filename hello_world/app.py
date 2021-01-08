@@ -1,12 +1,32 @@
 import json
 
+from typing import Any, Dict, NamedTuple
 
-def lambda_handler(event, context):
+
+Event = Dict[str, Any]
+
+
+def lambda_handler(event: Event, _: object):
+    user = User.from_event(event)
+
     return {
         "statusCode": 200,
         "body": json.dumps(
             {
-                "message": "Hello, Unknown Person!",
+                "message": f"Hello, {user.name}!",
             }
         ),
     }
+
+
+class User(NamedTuple):
+    name: str
+
+    @staticmethod
+    def from_event(event: Event) -> "User":
+        authorizer = event["requestContext"].get("authorizer")
+        if not authorizer:
+            # SAM does not support Cognito when running locally
+            return User(name="Local Host")
+
+        return User(name=authorizer["claims"]["name"])

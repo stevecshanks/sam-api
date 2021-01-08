@@ -40,6 +40,11 @@ Resources:
         - email
       UsernameAttributes:
         - email
+      Schema:
+        - Name: name
+          AttributeDataType: String
+          Mutable: true
+          Required: true
 
   UserPoolTokenClient:
     Type: AWS::Cognito::UserPoolClient
