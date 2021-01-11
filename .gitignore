@@ -1,5 +1,1 @@
-.venv/
-.python.installed
-.pytest_cache/
-__pycache__/
 .vscode/
