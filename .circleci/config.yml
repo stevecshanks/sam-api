@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  node: circleci/node@4.1.0
   sam: circleci/aws-sam-serverless@2.1.0
 
 jobs:
@@ -14,6 +15,15 @@ jobs:
       - run: touch .python.installed
       - run: make lint
       - run: make test
+  frontend-tests:
+    executor: node/default
+    working_directory: ~/project/frontend
+    steps:
+      - checkout:
+          path: ~/project
+      - node/install-packages
+      - run: make lint
+      - run: make test
   deploy:
     executor: sam/default
     steps:
@@ -25,9 +35,11 @@ workflows:
   main:
     jobs:
       - api-tests
+      - frontend-tests
       - deploy:
           requires:
             - api-tests
+            - frontend-tests
           filters:
             branches:
               only: main
