@@ -20,6 +20,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --max-warnings 0 --ext js,jsx,ts,tsx src",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

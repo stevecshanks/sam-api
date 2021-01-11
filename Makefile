@@ -1,4 +1,4 @@
-SUBDIRS = api
+SUBDIRS = api frontend
 
 .PHONY: deploy
 deploy: $(SUBDIRS)
