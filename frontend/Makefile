@@ -2,6 +2,10 @@
 dev: node_modules
 	npm run start
 
+.PHONY: deploy
+deploy:
+	@echo "No deploy stage for frontend yet"
+
 .PHONY: test
 test: node_modules typecheck
 	CI=true npm test
