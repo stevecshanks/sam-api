@@ -4,11 +4,13 @@ orbs:
   sam: circleci/aws-sam-serverless@2.1.0
 
 jobs:
-  build-and-test:
+  api-tests:
     docker:
       - image: circleci/python:3.8.6
+    working_directory: ~/project/api
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - run: touch .python.installed
       - run: make lint
       - run: make test
@@ -22,10 +24,10 @@ jobs:
 workflows:
   main:
     jobs:
-      - build-and-test
+      - api-tests
       - deploy:
           requires:
-            - build-and-test
+            - api-tests
           filters:
             branches:
               only: main
