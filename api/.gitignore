@@ -1,0 +1,4 @@
+.venv/
+.python.installed
+.pytest_cache/
+__pycache__/
