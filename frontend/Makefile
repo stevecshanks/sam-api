@@ -3,8 +3,10 @@ dev: node_modules
 	npm run start
 
 .PHONY: deploy
-deploy:
-	@echo "No deploy stage for frontend yet"
+deploy: website-bucket
+	npm ci
+	npm run build
+	aws s3 cp build s3://sam-api.stevecshanks.dev --recursive --acl public-read
 
 .PHONY: test
 test: node_modules typecheck
@@ -21,3 +23,9 @@ typecheck:
 node_modules: package.json
 	npm install
 	touch -m $@
+
+.PHONY: website-bucket
+website-bucket:
+	aws cloudformation deploy \
+		--stack-name sam-api-website-bucket \
+		--template-file website_s3_bucket.yaml
