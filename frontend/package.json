@@ -24,6 +24,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "typecheck": "tsc --noEmit",
+    "generate-env": "node generateEnv.js",
     "lint": "eslint --max-warnings 0 --ext js,jsx,ts,tsx src",
     "lint:fix": "eslint --fix --ext js,jsx,ts,tsx src",
     "eject": "react-scripts eject"
