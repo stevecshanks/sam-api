@@ -13,6 +13,11 @@ Globals:
         CognitoAuthorizer:
           UserPoolArn: !GetAtt "UserPool.Arn"
       DefaultAuthorizer: CognitoAuthorizer
+      AddDefaultAuthorizerToCorsPreflight: False
+    Cors:
+      AllowMethods: "'*'" # FIXME
+      AllowHeaders: "'*'" # FIXME
+      AllowOrigin: "'*'" # FIXME
 
   Function:
     Timeout: 3
@@ -60,3 +65,5 @@ Outputs:
     Value: !Ref UserPool
   CognitoClientId:
     Value: !Ref UserPoolTokenClient
+  APIBaseURL:
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"

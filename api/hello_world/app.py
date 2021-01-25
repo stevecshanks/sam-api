@@ -16,6 +16,10 @@ def lambda_handler(event: Event, _: object):
                 "message": f"Hello, {user.name}!",
             }
         ),
+        # FIXME
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+        },
     }
 
 

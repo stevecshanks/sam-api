@@ -1,4 +1,4 @@
-import { Amplify, Auth } from "aws-amplify";
+import { Amplify, API, Auth } from "aws-amplify";
 import awsconfig from "./awsconfig";
 
 import "./App.css";
@@ -12,9 +12,32 @@ import {
   FormEvent,
   ReactElement,
   SetStateAction,
+  useEffect,
 } from "react";
 import { useState } from "react";
 import { Alert } from "react-bootstrap";
+
+Amplify.configure({
+  Auth: {
+    region: awsconfig.cognito.REGION,
+    userPoolId: awsconfig.cognito.USER_POOL_ID,
+    userPoolWebClientId: awsconfig.cognito.APP_CLIENT_ID,
+    authenticationFlowType: "USER_PASSWORD_AUTH",
+  },
+  API: {
+    endpoints: [
+      {
+        name: "Hello World API",
+        endpoint: awsconfig.apiGateway.BASE_URL,
+        custom_header: async () => ({
+          Authorization: `${(await Auth.currentSession())
+            .getIdToken()
+            .getJwtToken()}`,
+        }),
+      },
+    ],
+  },
+});
 
 function App(): ReactElement {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -43,15 +66,6 @@ function LogInForm({ setIsLoggedIn }: LogInProps): ReactElement {
 
   async function logMeIn(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    Amplify.configure({
-      Auth: {
-        region: awsconfig.cognito.REGION,
-        userPoolId: awsconfig.cognito.USER_POOL_ID,
-        userPoolWebClientId: awsconfig.cognito.APP_CLIENT_ID,
-        authenticationFlowType: "USER_PASSWORD_AUTH",
-      },
-    });
 
     try {
       setErrorMessage(null);
@@ -100,7 +114,18 @@ function LogInForm({ setIsLoggedIn }: LogInProps): ReactElement {
 }
 
 function Greeting(): ReactElement {
-  return <p>Hello, World!</p>;
+  const [greeting, setGreeting] = useState("Loading...");
+
+  async function fetchGreeting() {
+    const response = await API.get("Hello World API", "/hello", {});
+    setGreeting(response.message);
+  }
+
+  useEffect(() => {
+    fetchGreeting();
+  }, []);
+
+  return <p>{greeting}</p>;
 }
 
 export default App;

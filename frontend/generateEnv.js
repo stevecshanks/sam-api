@@ -4,6 +4,7 @@ const outputs = readStackOutputsFromStdin();
 writeEnvFile({
   REACT_APP_AWS_COGNITO_USER_POOL_ID: outputs["CognitoUserPoolId"],
   REACT_APP_AWS_COGNITO_APP_CLIENT_ID: outputs["CognitoClientId"],
+  REACT_APP_AWS_API_GATEWAY_BASE_URL: outputs["APIBaseURL"],
 });
 
 function readStackOutputsFromStdin() {
